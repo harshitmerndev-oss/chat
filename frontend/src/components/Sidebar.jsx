@@ -142,9 +142,9 @@ const Sidebar = () => {
 
             </div>
 
-            <div
+           <div
   className={`w-3 h-3 rounded-full ${
-    onlineusers.includes(item._id)
+    onlineusers?.includes(item._id)
       ? "bg-green-500"
       : "bg-gray-400"
   }`}

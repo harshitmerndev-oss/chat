@@ -7,7 +7,7 @@ const userSlice = createSlice({
         otherusers:[],
         selectedUser:null,
         socket:null,
-        onlineusers:null
+        onlineusers:[]
 
     },
     reducers: {
@@ -26,9 +26,9 @@ const userSlice = createSlice({
         setSocket:(state,action)=>{
             state.socket=action.payload
         },
-        setonlineusers:(state,action)=>{
-            state.onlineusers=action.payload
-        }
+       setOnlineUsers: (state, action) => {
+    state.onlineusers = action.payload || [];
+}
 
     },
 });
