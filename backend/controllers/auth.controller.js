@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import gentoken from "../config/token.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
