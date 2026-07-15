@@ -14,7 +14,7 @@ import { app, server } from "./socket/socket.js";
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://realtimeconvo-9fwm.onrender.com",
     credentials: true,
 }));
 
