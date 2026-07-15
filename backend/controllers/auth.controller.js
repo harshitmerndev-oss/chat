@@ -58,12 +58,15 @@ if(!ismatch){
     return res.status(400).json({ message: "Invalid password" });
 }
     const token = await gentoken(user._id);
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      sameSite: "None",
-      secure: true,
-    });
+   const isProduction = process.env.NODE_ENV === "production";
+
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "None" : "Lax",
+  path: "/",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
     const { password: _, ...userData } = user.toObject();
 
     res.status(200).json({
@@ -78,11 +81,16 @@ if(!ismatch){
   }
 };
  
-export const logout=async(req,res)=>{
-    try{
-      res.clearCookie("token");
-      res.status(200).json({message:"logout successful"});
-    }catch(error){
-        res.status(500).json({message:"logout Server Error"});
-    }
-}
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
+
+    res.status(200).json({ message: "logout successful" });
+  } catch (error) {
+    res.status(500).json({ message: "logout Server Error" });
+  }
+};
