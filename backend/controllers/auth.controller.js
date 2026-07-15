@@ -45,36 +45,45 @@ res.status(201).json({
 };
 export const login = async (req, res) => {
   try {
-    const {  email, password } = req.body;
-   
-  
-    const user= await User.findOne({ email });
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
-     
-const ismatch=await bcrypt.compare(password,user.password)
-if(!ismatch){
-    return res.status(400).json({ message: "Invalid password" });
-}
-    const token = await gentoken(user._id);
-   const isProduction = process.env.NODE_ENV === "production";
 
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "None" : "Lax",
-  path: "/",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
+    const ismatch = await bcrypt.compare(password, user.password);
+
+    if (!ismatch) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    console.log("Generated Token:", token);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    console.log("Set-Cookie Header:", res.getHeader("Set-Cookie"));
+
     const { password: _, ...userData } = user.toObject();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Login successful",
       user: userData,
     });
-  
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "login Server Error" });
