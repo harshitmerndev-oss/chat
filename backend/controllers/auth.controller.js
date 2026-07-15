@@ -28,8 +28,8 @@ export const signup = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      sameSite: "Strict",
-      secure: false,
+      sameSite: "None",
+      secure: true,
     });
    const { password:_, ...userWithoutPassword } = user.toObject();
 
@@ -61,8 +61,8 @@ if(!ismatch){
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      sameSite: "Strict",
-      secure: false,
+      sameSite: "None",
+      secure: true,
     });
     const { password: _, ...userData } = user.toObject();
 
